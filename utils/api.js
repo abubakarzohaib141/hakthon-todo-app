@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://backend-todo-app-27ny.onrender.com/docs#/';
 
 export const apiClient = axios.create({
   baseURL: API_URL,
