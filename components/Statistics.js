@@ -1,13 +1,19 @@
 import { useState, useEffect } from 'react';
+import { useAuth } from '../contexts/AuthContext';
 import { todoAPI } from '../utils/api';
 
 export default function Statistics() {
+  const { token } = useAuth();
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchStatistics();
-  }, []);
+    if (token) {
+      fetchStatistics();
+    } else {
+      setLoading(false);
+    }
+  }, [token]);
 
   const fetchStatistics = async () => {
     try {
@@ -16,12 +22,13 @@ export default function Statistics() {
       setStats(response.data);
     } catch (err) {
       console.error('Error fetching statistics:', err);
+      setStats(null);
     } finally {
       setLoading(false);
     }
   };
 
-  if (loading || !stats) {
+  if (loading) {
     return (
       <div className="space-y-4">
         <div className="h-8 bg-gradient-to-r from-blue-200 to-blue-100 rounded-lg animate-pulse"></div>
@@ -32,6 +39,10 @@ export default function Statistics() {
         </div>
       </div>
     );
+  }
+
+  if (!stats) {
+    return null;
   }
 
   const StatCard = ({ icon, label, value, color = 'blue' }) => {
